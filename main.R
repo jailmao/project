@@ -54,22 +54,16 @@ modelCoef<- coef(model)
 simulate_distribution <- function(distribution, model, N) {
   set.seed(42)  
   
-  if (distribution == "norm") {
-    simulated_values <- rnorm(N, 0, 1)
-  } else if (distribution == "snorm") {
-    simulated_values <- rsnorm(N, 0, 1, xi=model["skew"])
-  } else if (distribution == "std") {
-    simulated_values <- rstd(N, 0, 1, nu = model["shape"])
-  } else if (distribution =="sstd"){
-    simulated_values <- rsstd(N, 0, 1, nu = model["shape"], xi = model ["skew"])
-  } else if (distribution == "ged"){
-    simulated_values <- rged (N, 0, 1, nu=model["shape"])
-  } else if (distribution == "sged"){
-    simulated_values <- rsged (N, 0, 1, nu=model["shape"], xi= model["skew"])
-  }
-  else {
+  simulated_values <- switch(
+    distribution,
+    "norm" = rnorm(N, 0, 1),
+    "snorm" = rsnorm(N, 0, 1, xi = model["skew"]),
+    "std" = rstd(N, 0, 1, nu = model["shape"]),
+    "sstd" = rsstd(N, 0, 1, nu = model["shape"], xi = model["skew"]),
+    "ged" = rged(N, 0, 1, nu = model["shape"]),
+    "sged" = rsged(N, 0, 1, nu = model["shape"], xi = model["skew"]),
     stop("Unsupported distribution")
-  }
+  )
   
   return(simulated_values)
 }
